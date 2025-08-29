@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=3 uid="uid://th0vagbmgc0v"]
+
+[ext_resource type="Script" uid="uid://c65ot021hogrj" path="res://scripts/gamemanager.gd" id="1_20odx"]
+[ext_resource type="Texture2D" uid="uid://coyjluex1bc50" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_fs3jg"]
+[ext_resource type="PackedScene" uid="uid://bkgeuxnoqpf6j" path="res://tscn/player.tscn" id="2_7y2p1"]
+[ext_resource type="PackedScene" uid="uid://dj7u3jk282vr5" path="res://tscn/Slimer.tscn" id="3_7y2p1"]
+[ext_resource type="FontFile" uid="uid://b7cgelncqgfi1" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_330ct"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_j3pou"]
+distance = 14.0
+
+[node name="Begin" type="Node2D" node_paths=PackedStringArray("slimer_spawn_timer", "score_label", "gameover")]
+y_sort_enabled = true
+script = ExtResource("1_20odx")
+slimer_scene = ExtResource("3_7y2p1")
+slimer_spawn_timer = NodePath("Timer")
+score_label = NodePath("CanvasLayer/Score")
+gameover = NodePath("CanvasLayer/GAMEOVER")
+
+[node name="Background1" type="Sprite2D" parent="."]
+position = Vector2(-120, -1)
+texture = ExtResource("1_fs3jg")
+metadata/_edit_lock_ = true
+
+[node name="Background2" type="Sprite2D" parent="."]
+position = Vector2(120, -1)
+texture = ExtResource("1_fs3jg")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2.405, 2.405)
+metadata/_edit_lock_ = true
+
+[node name="player" parent="." instance=ExtResource("2_7y2p1")]
+position = Vector2(-164, 80)
+
+[node name="Boundary" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="StaticBody2D_Down" type="StaticBody2D" parent="Boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D_Down"]
+position = Vector2(-1, 144)
+shape = SubResource("WorldBoundaryShape2D_j3pou")
+
+[node name="StaticBody2D_Up" type="StaticBody2D" parent="Boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D_Up"]
+position = Vector2(0, 13)
+rotation = -3.14159
+shape = SubResource("WorldBoundaryShape2D_j3pou")
+
+[node name="StaticBody2D_Left" type="StaticBody2D" parent="Boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D_Left"]
+position = Vector2(248, 78)
+rotation = -1.57079
+shape = SubResource("WorldBoundaryShape2D_j3pou")
+
+[node name="StaticBody2D_Right" type="StaticBody2D" parent="Boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D_Right"]
+position = Vector2(-250, 95)
+rotation = 1.57079
+shape = SubResource("WorldBoundaryShape2D_j3pou")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Score" type="Label" parent="CanvasLayer"]
+offset_left = 873.0
+offset_top = 60.0
+offset_right = 1082.0
+offset_bottom = 122.0
+theme_override_fonts/font = ExtResource("5_330ct")
+theme_override_font_sizes/font_size = 61
+text = "Score : 0"
+
+[node name="GAMEOVER" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.5
+offset_top = -31.0
+offset_right = 150.5
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.526721, 0, 0.158909, 1)
+theme_override_constants/outline_size = 40
+theme_override_fonts/font = ExtResource("5_330ct")
+theme_override_font_sizes/font_size = 111
+text = "GAME OVER"
+
+[node name="1" type="Label" parent="CanvasLayer/GAMEOVER"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 0.5
+offset_top = 83.0
+offset_right = 0.5
+offset_bottom = 135.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.526721, 0, 0.158909, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = ExtResource("5_330ct")
+theme_override_font_sizes/font_size = 51
+text = "寄了喵"
+
+[connection signal="timeout" from="Timer" to="." method="spawn_slimer"]
